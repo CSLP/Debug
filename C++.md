@@ -349,5 +349,83 @@
 
   * 数组下标越界
 
+# 7.Sun Mar  8 20:46:59 CST 2020插入排序
+
+* 期望：
+
+  * 20 21 20 19 18 17 16 15 14 13 12 11 1 2 3 4 5 6 7 8 9
+    1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19 20 20 21
+    请按任意键继续. . .
+
+* 错误：
+
+  * 20 21 20 19 18 17 16 15 14 13 12 11 1 2 3 4 5 6 7 8 9
+    20 20 19 18 17 16 15 14 13 12 11 1 2 3 4 5 6 7 8 9 21
+    请按任意键继续. . .
+
+* 源码：
+
+  * ```C++
+    void vector::insertSort(int lo,int hi)
+    {
+        for(int i=lo+1;i<hi;i++)
+        {
+            int insertPoint=i;
+            for(int j=lo;j<i;j++)
+                if(_elem[j]>_elem[i]) insertPoint=j; //查找插入点，可以调用search O(logn)
+            if(insertPoint==i) continue;
+            else 
+            {
+                int temp=_elem[i];
+                for(int k=i;k>insertPoint;k--)   //插入O(n)
+                    _elem[k]=_elem[k-1];
+                _elem[insertPoint]=temp;
+            }
+        }
+    }
+    ```
+
+* 解决：
+
+  * 先缩小待排序数组的规模，然后仔细看错误。无果。然后定点。没认真看，无果，感觉没什么问题。然后输出insertPoint的值，发现问题，值不对，然后继续定点，终于发现问题了。在6,7行，本意是找到第一个大于待插入数的值，然后insertPoint记录其下标方便之后插入。但是这个循环找到insertPoint就应该退出，但是循环还会执行，insertPoint不再是第一个大于待插入数的位置
+
+* 改正：
+
+  * ```C++
+    void vector::insertSort(int lo,int hi)
+    {
+        for(int i=lo+1;i<hi;i++)
+        {
+            int insertPoint=i;
+            for(int j=lo;j<i;j++)
+                if(_elem[j]>_elem[i]) 
+                {
+                    insertPoint=j; //查找插入点，可以调用search O(logn),一旦找到就结束循环
+                    break;
+                }
+            if(insertPoint==i) continue;
+            else 
+            {
+                int temp=_elem[i];
+                for(int k=i;k>insertPoint;k--)   //插入O(n)
+                    _elem[k]=_elem[k-1];
+                _elem[insertPoint]=temp;
+            }
+        }
+    }
+    ```
+  
+* 反思：
+
+  * 小心谨慎吧，一找到就应该退出循环的额，大意了。
+  
+* 类型：
+  
+  * 变量意义不一致
+  
+  
+
+
+
 
 
